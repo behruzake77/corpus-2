@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: var(--font-fraunces), "Iowan Old Style", Palatino, serif;
+  --font-sans: var(--font-source), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-ibm), ui-monospace, monospace;
+
+  --color-background: #f3eee4;
+  --color-foreground: #172025;
+  --color-primary: #1c6568;
+  --color-on-primary: #f3eee4;
+  --color-accent: #a13333;
+  --color-on-accent: #ffffff;
+  --color-secondary: #b0894d;
+  --color-card: #fbf7f0;
+  --color-muted: #5a6469;
+  --color-border: #d5cbb8;
+  --color-ring: #1c6568;
+  --color-ink: #0e1418;
+  --color-ink-2: #161e24;
+  --color-bone: #e8dcc8;
+  --color-signal: #3e9a97;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-source), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+  background-image: radial-gradient(rgba(23, 32, 37, 0.55) 0.6px, transparent 0.7px);
+  background-size: 3px 3px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-primary) 28%, transparent);
+  color: var(--color-foreground);
+}
+
+button,
+[role="button"],
+a,
+input,
+select,
+textarea,
+label[for] {
+  cursor: pointer;
+}
+
+.font-display {
+  font-family: var(--font-fraunces), "Iowan Old Style", Palatino, serif;
+  font-optical-sizing: auto;
+}
+
+.atlas-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--color-bone) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-bone) 12%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.paper-rule {
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, var(--color-foreground) 16%, transparent),
+    transparent
+  );
+}
+
+@keyframes corpus-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes corpus-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes corpus-drift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(12px, -18px, 0);
+  }
+}
+
+.anatomy-float {
+  animation: corpus-float 10s ease-in-out infinite;
+}
+
+.hud-pulse {
+  animation: corpus-pulse 3.6s ease-in-out infinite;
+}
+
+.particle {
+  animation: corpus-drift 14s linear infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .anatomy-float,
+  .hud-pulse,
+  .particle {
+    animation: none !important;
+  }
+}
