@@ -56,6 +56,13 @@ Dark scientific (hero, CTA, product canvas):
 - Anatomy float 10s ease-in-out
 - Respect prefers-reduced-motion: render final state, no float/parallax
 
+Spring curves (from Kinetics, see src/components/kinetics):
+- --ease-spring: cubic-bezier(.34,1.56,.64,1) — press/release, pills, indicators (≤550ms)
+- --ease-out-expo: cubic-bezier(.16,1,.3,1) — progress fills, rings, reveals (≤900ms)
+- --ease-in-out-quart: cubic-bezier(.65,0,.35,1) — ring draw, focus pulls
+- Magnetic pull ≤0.22 of pointer offset; squish scale 0.94; hover lift 3px
+- Feedback: Success Check (ring → tick), Error Shake 450ms, Toast overshoot 550ms
+
 ## Components
 
 - Buttons: solid accent (primary CTA), outline bone/ink (secondary)

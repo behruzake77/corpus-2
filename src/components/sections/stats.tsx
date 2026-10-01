@@ -1,4 +1,5 @@
 import { productMetrics } from "@/lib/systems";
+import { CountUp } from "@/components/kinetics";
 
 export function Stats() {
   return (
@@ -17,7 +18,7 @@ export function Stats() {
             }`}
           >
             <p className="font-display text-3xl tracking-[-0.03em] text-foreground sm:text-4xl">
-              {metric.value}
+              <CountUp value={metric.value} duration={1200 + index * 150} />
             </p>
             <p className="mt-2 font-mono text-[0.68rem] uppercase tracking-[0.16em] text-muted">
               {metric.label}

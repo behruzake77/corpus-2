@@ -40,11 +40,11 @@ export function HowItWorks() {
           />
           <ol className="grid gap-8 lg:grid-cols-3 lg:gap-6">
           {steps.map((step, index) => (
-            <li key={step.id} className="relative">
+            <li key={step.id} className="group relative">
               <Reveal delay={index * 0.08}>
                 <article>
                   <div className="flex items-center gap-4 lg:block">
-                    <span className="relative z-[1] inline-flex h-8 w-8 items-center justify-center rounded-full border border-foreground bg-background font-mono text-[0.7rem] text-foreground">
+                    <span className="relative z-[1] inline-flex h-8 w-8 items-center justify-center rounded-full border border-foreground bg-background font-mono text-[0.7rem] text-foreground transition-[transform,background-color,color] duration-500 [transition-timing-function:var(--ease-spring)] group-hover:scale-110 group-hover:bg-foreground group-hover:text-background">
                       {step.id}
                     </span>
                     <h3 className="font-display text-2xl tracking-[-0.02em] lg:mt-6">

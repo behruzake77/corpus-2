@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useReducedMotion } from "framer-motion";
+import { Heartbeat } from "@/components/kinetics";
 
 const labels = [
   {
@@ -78,9 +79,13 @@ export function AnatomyVisualization() {
       <p className="absolute left-6 top-6 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-bone/55">
         Plate 01 · Anterior
       </p>
-      <p className="absolute right-6 top-6 font-mono text-[0.62rem] tracking-[0.16em] text-bone/45">
-        41.8° N · live
-      </p>
+      <div className="absolute right-6 top-5 flex items-center gap-2">
+        <Heartbeat scale={0.34} className="opacity-90" />
+        <p className="font-mono text-[0.62rem] tracking-[0.16em] text-bone/45">
+          <span className="k-pulse-dot mr-1.5 h-1.5 w-1.5 bg-signal align-middle" aria-hidden="true" />
+          live
+        </p>
+      </div>
 
       <div className={`absolute inset-x-0 top-[8%] bottom-[10%] ${reduce ? "" : "anatomy-float"}`}>
         <Image
@@ -114,8 +119,8 @@ export function AnatomyVisualization() {
               }`}
             />
             <span
-              className={`hud-pulse h-1.5 w-1.5 rounded-full ${
-                isActive ? "bg-signal" : "bg-bone/50"
+              className={`hud-pulse h-1.5 w-1.5 rounded-full transition-transform duration-500 [transition-timing-function:var(--ease-spring)] ${
+                isActive ? "scale-[1.6] bg-signal" : "bg-bone/50"
               }`}
             />
             <span className="block">
@@ -140,8 +145,14 @@ export function AnatomyVisualization() {
         <p className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-signal">
           Selected structure
         </p>
-        <p className="mt-1 font-display text-xl leading-tight">{current.name}</p>
-        <p className="mt-1 text-sm text-bone/70">{current.note}</p>
+        <div key={current.id} className="k-stagger">
+          <p className="mt-1 font-display text-xl leading-tight" style={{ "--k-i": 0 } as React.CSSProperties}>
+            {current.name}
+          </p>
+          <p className="mt-1 text-sm text-bone/70" style={{ "--k-i": 1 } as React.CSSProperties}>
+            {current.note}
+          </p>
+        </div>
       </aside>
     </div>
   );

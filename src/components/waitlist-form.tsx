@@ -1,11 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { FloatingField, SuccessCheck } from "@/components/kinetics";
 
 export function WaitlistForm() {
+  const id = useId();
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [shake, setShake] = useState(false);
+
+  function fail(text: string) {
+    setStatus("error");
+    setMessage(text);
+    // Error Shake — re-arm so repeated failures still shake.
+    setShake(false);
+    requestAnimationFrame(() => setShake(true));
+    setTimeout(() => setShake(false), 500);
+  }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -24,57 +36,57 @@ export function WaitlistForm() {
       });
       const payload = (await response.json()) as { ok: boolean; error?: string };
       if (!response.ok || !payload.ok) {
-        setStatus("error");
-        setMessage(payload.error ?? "Could not join the list.");
+        fail(payload.error ?? "Could not join the list.");
         return;
       }
       setStatus("ok");
       setMessage("You’re on the list. We’ll write when new systems open.");
       form.reset();
     } catch {
-      setStatus("error");
-      setMessage("Network error. Try again in a moment.");
+      fail("Network error. Try again in a moment.");
     }
   }
 
   return (
     <form onSubmit={onSubmit} className="mt-5 space-y-3" noValidate>
       <div className="grid gap-3 sm:grid-cols-2">
-        <label className="block">
-          <span className="sr-only">Name</span>
-          <input
-            name="name"
-            type="text"
-            autoComplete="name"
-            required
-            placeholder="Name"
-            className="h-11 w-full rounded-[6px] border border-border bg-card px-3 text-[0.95rem] text-foreground placeholder:text-muted/80"
-          />
-        </label>
-        <label className="block">
-          <span className="sr-only">Email</span>
-          <input
-            name="email"
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            required
-            placeholder="Email"
-            className="h-11 w-full rounded-[6px] border border-border bg-card px-3 text-[0.95rem] text-foreground placeholder:text-muted/80"
-          />
-        </label>
+        <FloatingField
+          id={`${id}-name`}
+          name="name"
+          label="Name"
+          type="text"
+          autoComplete="name"
+          required
+          invalid={shake}
+        />
+        <FloatingField
+          id={`${id}-email`}
+          name="email"
+          label="Email"
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          required
+          invalid={shake}
+        />
       </div>
-      <Button type="submit" variant="primary" disabled={status === "loading"}>
-        {status === "loading" ? "Joining…" : "Join the list"}
-      </Button>
-      {message ? (
-        <p
-          role="status"
-          className={`text-sm ${status === "error" ? "text-accent" : "text-primary"}`}
-        >
-          {message}
-        </p>
-      ) : null}
+      <div className="flex flex-wrap items-center gap-3">
+        <Button type="submit" variant="primary" disabled={status === "loading" || status === "ok"}>
+          {status === "loading" ? "Joining…" : status === "ok" ? "Joined" : "Join the list"}
+          {status === "ok" ? (
+            <SuccessCheck done size={18} tone="stroke-on-primary" idleTone="stroke-transparent" />
+          ) : null}
+        </Button>
+        {message ? (
+          <p
+            key={`${status}-${message}`}
+            role="status"
+            className={`k-toast text-sm ${status === "error" ? "text-accent" : "text-primary"}`}
+          >
+            {message}
+          </p>
+        ) : null}
+      </div>
     </form>
   );
 }

@@ -74,11 +74,12 @@ export function Nav() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-[0.92rem] tracking-[-0.01em] transition-colors duration-200 ${
+                className={`k-underline text-[0.92rem] tracking-[-0.01em] transition-colors duration-200 ${
                   inverted
                     ? "text-bone/72 hover:text-bone"
                     : "text-muted hover:text-foreground"
                 } ${active && !link.href.includes("#") ? "text-foreground" : ""}`}
+                aria-current={active && !link.href.includes("#") ? "page" : undefined}
               >
                 {link.label}
               </Link>
@@ -115,18 +116,19 @@ export function Nav() {
           id={menuId}
           className="border-t border-border bg-background text-foreground lg:hidden"
         >
-          <nav className="mx-auto flex max-w-6xl flex-col px-4 py-5 sm:px-6" aria-label="Mobile">
-            {links.map((link) => (
+          <nav className="k-stagger mx-auto flex max-w-6xl flex-col px-4 py-5 sm:px-6" aria-label="Mobile">
+            {links.map((link, index) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className="flex min-h-12 items-center border-b border-border/70 font-display text-2xl tracking-[-0.02em]"
+                style={{ "--k-i": index } as React.CSSProperties}
                 onClick={() => setOpen(false)}
               >
                 {link.label}
               </Link>
             ))}
-            <div className="mt-5 grid grid-cols-2 gap-3">
+            <div className="mt-5 grid grid-cols-2 gap-3" style={{ "--k-i": links.length } as React.CSSProperties}>
               <ButtonLink href="/signin" variant="outline" onClick={() => setOpen(false)}>
                 Sign In
               </ButtonLink>

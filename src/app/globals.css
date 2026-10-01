@@ -20,6 +20,12 @@
   --color-ink-2: #161e24;
   --color-bone: #e8dcc8;
   --color-signal: #3e9a97;
+
+  /* Kinetics spring curves — ported from ckissi/kinetics */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-shake: cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
 html {
@@ -130,6 +136,250 @@ label[for] {
   animation: corpus-drift 14s linear infinite alternate;
 }
 
+/* ------------------------------------------------------------------ */
+/* Kinetics micro-interactions, tuned to the Corpus atlas language      */
+/* ------------------------------------------------------------------ */
+
+/* Squish Button — compresses on press, springs back on release */
+.k-squish {
+  transition:
+    transform 0.5s var(--ease-spring),
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+  will-change: transform;
+}
+
+.k-squish:active {
+  transform: scale(0.94);
+  transition: transform 0.08s ease-out;
+}
+
+/* Hover Lift — surface rises with a soft cast shadow */
+.k-lift {
+  transition:
+    transform 0.45s var(--ease-spring),
+    box-shadow 0.45s var(--ease-out-expo),
+    border-color 0.2s;
+}
+
+.k-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px -22px rgba(23, 32, 37, 0.45);
+}
+
+/* Underline Draw — scaleX from the left on hover */
+.k-underline {
+  position: relative;
+}
+
+.k-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s var(--ease-out-expo);
+}
+
+.k-underline:hover::after,
+.k-underline:focus-visible::after,
+.k-underline[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+/* Error Shake */
+@keyframes k-shake-x {
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+
+.k-shake {
+  animation: k-shake-x 0.45s var(--ease-shake) both;
+}
+
+/* Pulse Badge — expanding ring draws the eye to new state */
+@keyframes k-pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+.k-pulse-dot {
+  position: relative;
+  display: inline-block;
+  border-radius: 9999px;
+}
+
+.k-pulse-dot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  animation: k-pulse-ring 1.8s var(--ease-out-expo) infinite;
+}
+
+/* Heartbeat Monitor — glowing dot traces an EKG along the path */
+@keyframes k-trace {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+.k-ekg-dot {
+  animation: k-trace 2.4s linear infinite;
+}
+
+/* Success Check — ring draws, then tick */
+.k-check-ring {
+  fill: none;
+  stroke-width: 3;
+  stroke-dasharray: 151;
+  stroke-dashoffset: 151;
+  transition:
+    stroke-dashoffset 0.5s var(--ease-in-out-quart),
+    stroke 0.3s;
+}
+
+.k-check-tick {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 28;
+  stroke-dashoffset: 28;
+  transition: stroke-dashoffset 0.3s ease-out 0.4s;
+}
+
+.k-check.is-done .k-check-ring,
+.k-check.is-done .k-check-tick {
+  stroke-dashoffset: 0;
+}
+
+/* Toast Overshoot */
+@keyframes k-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.k-toast {
+  animation: k-toast-in 0.55s var(--ease-spring) both;
+}
+
+/* Number Counter bump */
+.k-bump {
+  display: inline-block;
+  transition: transform 0.4s var(--ease-spring), color 0.3s;
+}
+
+.k-bump.is-bumping {
+  transform: scale(1.22) translateY(-4px);
+}
+
+/* Floating Label */
+.k-field {
+  position: relative;
+}
+
+.k-field > label {
+  position: absolute;
+  left: 0.8rem;
+  top: 50%;
+  translate: 0 -50%;
+  pointer-events: none;
+  color: color-mix(in srgb, var(--color-muted) 85%, transparent);
+  font-size: 0.95rem;
+  transition:
+    translate 0.35s var(--ease-spring),
+    scale 0.35s var(--ease-spring),
+    color 0.2s;
+  transform-origin: left center;
+}
+
+.k-field > input:focus + label,
+.k-field > input:not(:placeholder-shown) + label {
+  translate: 0 -0.85rem;
+  scale: 0.72;
+  color: var(--color-primary);
+}
+
+.k-field > input::placeholder {
+  color: transparent;
+}
+
+/* Stagger Entrance — children rise in sequence */
+@keyframes k-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.k-stagger > * {
+  animation: k-rise 0.5s var(--ease-out-expo) both;
+  animation-delay: calc(var(--k-i, 0) * 60ms);
+}
+
+/* Confetti Burst — tiny paper pieces on milestone */
+@keyframes k-confetti {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.4);
+  }
+}
+
+.k-confetti-piece {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 9px;
+  border-radius: 1px;
+  animation: k-confetti 0.9s var(--ease-out-expo) forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -137,7 +387,28 @@ label[for] {
 
   .anatomy-float,
   .hud-pulse,
-  .particle {
+  .particle,
+  .k-pulse-dot::before,
+  .k-ekg-dot,
+  .k-confetti-piece,
+  .k-shake,
+  .k-toast,
+  .k-stagger > * {
     animation: none !important;
+  }
+
+  .k-squish,
+  .k-lift,
+  .k-bump,
+  .k-check-ring,
+  .k-check-tick,
+  .k-underline::after,
+  .k-field > label {
+    transition: none !important;
+  }
+
+  .k-lift:hover,
+  .k-squish:active {
+    transform: none;
   }
 }

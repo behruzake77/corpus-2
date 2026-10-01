@@ -31,7 +31,7 @@ type Common = {
 };
 
 function classes(variant: Variant, size: Size, className: string) {
-  return `inline-flex items-center justify-center gap-2 rounded-[6px] font-medium tracking-[-0.01em] transition-colors duration-200 cursor-pointer disabled:opacity-55 disabled:cursor-not-allowed ${variants[variant]} ${sizes[size]} ${className}`;
+  return `k-squish inline-flex items-center justify-center gap-2 rounded-[6px] font-medium tracking-[-0.01em] cursor-pointer disabled:opacity-55 disabled:cursor-not-allowed ${variants[variant]} ${sizes[size]} ${className}`;
 }
 
 export function Button({

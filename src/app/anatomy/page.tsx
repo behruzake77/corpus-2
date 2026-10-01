@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { anatomySystems } from "@/lib/systems";
+import { CountUp } from "@/components/kinetics";
 
 export const metadata: Metadata = {
   title: "Anatomy",
@@ -57,22 +58,31 @@ export default function AnatomyPage() {
                       <dt className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted">
                         Structures
                       </dt>
-                      <dd className="mt-1 font-display text-2xl">{system.structures}</dd>
+                      <dd className="mt-1 font-display text-2xl">
+                        <CountUp value={String(system.structures)} duration={1000} />
+                      </dd>
                     </div>
                     <div>
                       <dt className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted">
                         Lessons
                       </dt>
-                      <dd className="mt-1 font-display text-2xl">{system.lessons}</dd>
+                      <dd className="mt-1 font-display text-2xl">
+                        <CountUp value={String(system.lessons)} duration={1000} />
+                      </dd>
                     </div>
                   </dl>
                   <p className="mt-4 text-sm text-foreground/80">{system.clinical}</p>
                   <Link
                     href="/get-started"
-                    className="mt-6 inline-flex min-h-11 items-center gap-2 text-primary hover:text-foreground"
+                    className="group mt-6 inline-flex min-h-11 items-center gap-2 text-primary transition-colors hover:text-foreground"
                   >
-                    Start this system
-                    <ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />
+                    <span className="k-underline">Start this system</span>
+                    <ArrowRight
+                      size={16}
+                      strokeWidth={1.75}
+                      aria-hidden="true"
+                      className="transition-transform duration-500 [transition-timing-function:var(--ease-spring)] group-hover:translate-x-1"
+                    />
                   </Link>
                 </div>
               </article>

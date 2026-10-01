@@ -73,7 +73,7 @@ export function Features() {
                 className={`${feature.span} min-h-[12rem]`}
               >
                 <article
-                  className={`flex h-full flex-col justify-between rounded-[10px] border p-6 transition-colors duration-200 sm:p-7 ${
+                  className={`k-lift group flex h-full flex-col justify-between rounded-[10px] border p-6 sm:p-7 ${
                     dark
                       ? "border-ink bg-ink text-bone hover:border-signal/40"
                       : "border-border bg-card text-foreground hover:border-primary/35"
@@ -90,7 +90,9 @@ export function Features() {
                     <Icon
                       size={20}
                       strokeWidth={1.6}
-                      className={dark ? "text-signal" : "text-primary"}
+                      className={`transition-transform duration-500 [transition-timing-function:var(--ease-spring)] group-hover:scale-110 group-hover:-rotate-6 ${
+                        dark ? "text-signal" : "text-primary"
+                      }`}
                       aria-hidden="true"
                     />
                   </div>

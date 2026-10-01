@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { SuccessCheck } from "@/components/kinetics";
 
 type Learner = { name: string; email: string; yearOfStudy: string };
 
@@ -10,6 +11,15 @@ export function SignInForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">("idle");
   const [message, setMessage] = useState("");
   const [learner, setLearner] = useState<Learner | null>(null);
+  const [shake, setShake] = useState(false);
+
+  function fail(text: string) {
+    setStatus("error");
+    setMessage(text);
+    setShake(false);
+    requestAnimationFrame(() => setShake(true));
+    setTimeout(() => setShake(false), 500);
+  }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -28,22 +38,21 @@ export function SignInForm() {
         learner?: Learner;
       };
       if (!response.ok || !payload.ok || !payload.learner) {
-        setStatus("error");
-        setMessage(payload.error ?? "Could not find a studio.");
+        fail(payload.error ?? "Could not find a studio.");
         return;
       }
       setLearner(payload.learner);
       setStatus("ok");
     } catch {
-      setStatus("error");
-      setMessage("Network error. Try again in a moment.");
+      fail("Network error. Try again in a moment.");
     }
   }
 
   if (status === "ok" && learner) {
     return (
-      <div className="mt-8 rounded-[10px] border border-border bg-card p-6">
-        <p className="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-primary">
+      <div className="k-toast mt-8 rounded-[10px] border border-border bg-card p-6">
+        <p className="flex items-center gap-2 font-mono text-[0.68rem] uppercase tracking-[0.16em] text-primary">
+          <SuccessCheck done size={20} tone="stroke-primary" idleTone="stroke-border" />
           Welcome back
         </p>
         <p className="mt-3 font-display text-2xl">{learner.name}</p>
@@ -62,7 +71,7 @@ export function SignInForm() {
 
   return (
     <form onSubmit={onSubmit} className="mt-8 space-y-4" noValidate>
-      <label className="block">
+      <label className={`block ${shake ? "k-shake" : ""}`}>
         <span className="mb-1.5 block text-sm">Email</span>
         <input
           name="email"
@@ -70,11 +79,14 @@ export function SignInForm() {
           inputMode="email"
           autoComplete="email"
           required
-          className="h-11 w-full rounded-[6px] border border-border bg-card px-3"
+          aria-invalid={status === "error" || undefined}
+          className={`h-11 w-full rounded-[6px] border bg-card px-3 transition-colors duration-200 focus:border-primary ${
+            status === "error" ? "border-accent" : "border-border"
+          }`}
         />
       </label>
       {message ? (
-        <p role="status" className="text-sm text-accent">
+        <p key={message} role="status" className="k-toast text-sm text-accent">
           {message}
         </p>
       ) : null}

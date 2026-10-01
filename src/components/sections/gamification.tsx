@@ -1,5 +1,6 @@
 import { Flame, Medal, Target, Zap } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
+import { CountUp, ElasticBar, ProgressRing } from "@/components/kinetics";
 
 const plates = [
   {
@@ -48,7 +49,7 @@ export function Gamification() {
             const Icon = plate.icon;
             return (
               <Reveal key={plate.title} delay={index * 0.05}>
-                <article className="flex gap-4 rounded-[10px] border border-border bg-card p-5 sm:p-6">
+                <article className="k-lift flex gap-4 rounded-[10px] border border-border bg-card p-5 hover:border-primary/35 sm:p-6">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[6px] border border-border bg-background">
                     <Icon size={18} strokeWidth={1.7} className="text-primary" aria-hidden="true" />
                   </div>
@@ -67,23 +68,35 @@ export function Gamification() {
               <p className="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-muted">
                 Tonight’s set
               </p>
-              <p className="mt-2 font-display text-2xl">18 structures</p>
-              <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-border">
-                <div className="h-full w-2/3 bg-primary" />
-              </div>
-            </div>
-            <div>
-              <p className="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-muted">
-                Region fluency
+              <p className="mt-2 font-display text-2xl">
+                <CountUp value="18" duration={900} /> structures
               </p>
-              <p className="mt-2 font-display text-2xl">Upper limb 74%</p>
-              <p className="mt-2 text-sm text-muted">Brachial plexus still fragile</p>
+              <ElasticBar value={67} className="mt-3 h-1.5 bg-border" fillClassName="bg-primary" label="Tonight’s set progress" />
+              <p className="mt-2 text-sm text-muted">12 of 18 reviewed</p>
+            </div>
+            <div className="flex items-start gap-4">
+              <div className="relative shrink-0">
+                <ProgressRing value={74} size={72} stroke={5} label="Upper limb fluency 74 percent" />
+                <span className="absolute inset-0 flex items-center justify-center font-mono text-[0.72rem] text-foreground">
+                  <CountUp value="74%" duration={900} />
+                </span>
+              </div>
+              <div>
+                <p className="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-muted">
+                  Region fluency
+                </p>
+                <p className="mt-2 font-display text-2xl">Upper limb</p>
+                <p className="mt-2 text-sm text-muted">Brachial plexus still fragile</p>
+              </div>
             </div>
             <div>
               <p className="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-muted">
                 Streak
               </p>
-              <p className="mt-2 font-display text-2xl">12 days</p>
+              <p className="mt-2 flex items-center gap-2.5 font-display text-2xl">
+                <span className="k-pulse-dot h-2 w-2 bg-secondary" aria-hidden="true" />
+                <CountUp value="12" duration={900} /> days
+              </p>
               <p className="mt-2 text-sm text-muted">Next review in 6 hours</p>
             </div>
           </div>

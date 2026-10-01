@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { AnatomyVisualization } from "@/components/anatomy/visualization";
+import { Magnetic } from "@/components/kinetics";
 
 export function Hero() {
   const reduce = useReducedMotion();
@@ -42,13 +43,17 @@ export function Hero() {
             exploration, retrieval practice, and clinical context in one studio.
           </motion.p>
           <motion.div className="mt-8 flex flex-col gap-3 sm:flex-row" {...enter(0.28)}>
-            <ButtonLink href="/get-started" variant="accent" size="lg">
-              Start Learning
-              <ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />
-            </ButtonLink>
-            <ButtonLink href="/anatomy" variant="outline-light" size="lg">
-              Explore Anatomy
-            </ButtonLink>
+            <Magnetic>
+              <ButtonLink href="/get-started" variant="accent" size="lg" className="w-full sm:w-auto">
+                Start Learning
+                <ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />
+              </ButtonLink>
+            </Magnetic>
+            <Magnetic pull={0.16}>
+              <ButtonLink href="/anatomy" variant="outline-light" size="lg" className="w-full sm:w-auto">
+                Explore Anatomy
+              </ButtonLink>
+            </Magnetic>
           </motion.div>
           <motion.dl
             className="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-bone/15 pt-6"
